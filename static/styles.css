@@ -1,0 +1,35 @@
+html, body{width:100%,
+            height:100%;
+            margin:0;
+            background-color:#415E72;}
+
+#title{background-color:#415E72;
+         color: white;
+         padding:20px;   }
+
+hr{--bs-border-width:5px;
+        width:20%;}
+
+div.movies{width: 200px;
+       height:300px;
+        top:150px;
+        left:600px;
+
+       transition: transform 1s;
+        border-radius: 10px;
+
+
+        }
+.movies:hover{transform:rotateY(180deg);
+               transform-origin:center;
+                background-color:white;}
+
+
+.h1-img{top:90px; left:80px;
+        font-weight:900;
+        font-size:3rem;}
+
+@media (max-width:800px){
+        div.movies {left:200px;}
+
+        }

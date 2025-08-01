@@ -1,0 +1,6 @@
+1-css: to make the card turn: div{transition: transform 1s;}
+then hover {transform:rotateY(180deg)}
+https://www.w3schools.com/css/tryit.asp?filename=trycss3_transition_transform
+https://www.w3schools.com/cssref/css3_pr_transform-origin.php#gsc.tab=0
+
+
