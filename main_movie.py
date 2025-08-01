@@ -5,7 +5,7 @@ from sqlalchemy import Integer, String, Float
 from flask_bootstrap import Bootstrap5
 
 app = Flask(__name__)
-app.secret_key = 'njnewcubshn'
+app.secret_key = ''
 Bootstrap5(app)
 #-----------------------------------------------------------------------#
 #🟡 SQLAlchemy
@@ -14,7 +14,7 @@ class Base(DeclarativeBase):
     pass
 
 db = SQLAlchemy(model_class=Base)
-app.config["SQLALCHEMY_DATABASE_URI"] = "sqlite:///movies.db"
+app.config["SQLALCHEMY_DATABASE_URI"] = ""
 db.init_app(app)
 
 
@@ -48,6 +48,7 @@ with app.app_context():
 def home():
     movies = db.session.execute(db.select(Movie).order_by(Movie.title)).scalars().all()
     return render_template('index.html', movies=movies)
+
 
 
 
