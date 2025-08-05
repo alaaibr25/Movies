@@ -1,0 +1,13 @@
+{% from 'bootstrap5/form.html' import render_form %}
+{% extends "base.html" %}
+{% block title %}Update{%endblock%}
+
+{% block content %}
+<div id="title" >
+
+        <h1>{{movie.title}} </h1>
+        <hr>
+
+    {{ render_form(fform) }}
+</div>
+{%endblock%}
