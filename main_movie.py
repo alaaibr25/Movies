@@ -5,7 +5,18 @@ from sqlalchemy import Integer, String, Float
 from flask_bootstrap import Bootstrap5
 from wtforms import Form, IntegerField, StringField, validators, SubmitField
 from flask_wtf import FlaskForm
+from wtforms.validators import DataRequired
+import os
+import requests
 
+APIMV = os.getenv("APIMV")
+BR = os.getenv("BR")
+URI = "https://api.themoviedb.org/3/search/movie"
+URI_JPG ='https://image.tmdb.org/t/p/w500'
+headers = {
+    "accept": "application/json",
+    "Authorization": f"Bearer {BR}"
+}
 
 app = Flask(__name__)
 app.secret_key = ''
@@ -33,18 +44,6 @@ class Movie(db.Model):
 
 with app.app_context():
     db.create_all()
-
-# with app.app_context():
-#     movie = Movie(title='Phone Booth',
-#                       year=2002,
-#                       description="Publicist Stuart Shepard finds himself trapped in a phone booth, pinned down by an extortionist's sniper rifle. Unable to leave or receive outside help, Stuart's negotiation with the caller leads to a jaw-dropping climax.",
-#                       rate=7.4,
-#                       rank=10,
-#                       review='My favourite character was the caller.',
-#                       img_url="https://image.tmdb.org/t/p/w500/tjrX2oWRCM3Tvarz38zlZM7Uc10.jpg")
-#
-#     db.session.add(movie)
-#     db.session.commit()
 #-----------------------------------------------------------------------#
 #-----------------------------------------------------------------------#
 #🌶🌶🌶🌶Flask Form🌶🌶🌶🌶
@@ -54,16 +53,56 @@ class MovieForm(FlaskForm):
     review = StringField('Review')
     submit = SubmitField('Submit')
 
-
-
+class AddForm(FlaskForm):
+    new_title = StringField('Movie Title', validators=[DataRequired()])
+    submit = SubmitField('Add')
 
 #-----------------------------------------------------------------------#
 #-----------------------------------------------------------------------#
 
 @app.route('/')
 def home():
-    movies = db.session.execute(db.select(Movie).order_by(Movie.title)).scalars().all()
+    movies = db.session.execute(db.select(Movie).order_by(Movie.rate)).scalars().all()
+    for n in range(len(movies)):
+        movies[n].rank = len(movies) -n
+    db.session.commit()
+    
     return render_template('index.html', movies=movies)
+
+@app.route('/add', methods=['POST', 'GET'])
+def add_page():
+    add_form = AddForm()
+    if add_form.validate_on_submit():
+        params = {'query': add_form.new_title.data}
+        response = requests.get(URI, headers=headers, params=params).json()
+        results = response['results']
+        return render_template('select.html', data=results)
+   return render_template('add.html', form=add_form)    
+        
+@app.route('/select', methods=['POST', 'GET'])
+def select_movie():
+    movie_api_id = request.args.get('id')
+     if movie_api_id:
+
+            URI_PATH = f'https://api.themoviedb.org/3/movie/{movie_api_id}'
+            response = requests.get(URI_PATH, headers=headers).json()
+            new_movie = Movie(
+                        title=response['original_title'],
+                        year=response['release_date'].split('-')[0],
+                        description=response['overview'],
+                        rate=0,
+                        rank=0,
+                        review='',
+                        img_url=f"{URI_JPG}{response['poster_path']}"
+
+            )
+            db.session.add(new_movie)
+            db.session.commit()
+            return redirect(url_for('update_page', id=new_movie.id))
+
+    return render_template('select.html')
+    
+
 
 @app.route('/update', methods=['POST', 'GET'])
 def update_page():
@@ -77,8 +116,6 @@ def update_page():
         movie_to_update.review = movie_form.review.data
         db.session.commit()
         return redirect(url_for('home'))
-
-
 
     return render_template("update.html", movie=movie_to_update, fform=movie_form)
 
@@ -94,25 +131,5 @@ def delete():
 
 
 
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
 app.run(debug=True)
+
