@@ -3,4 +3,28 @@ then hover {transform:rotateY(180deg)}
 https://www.w3schools.com/css/tryit.asp?filename=trycss3_transition_transform
 https://www.w3schools.com/cssref/css3_pr_transform-origin.php#gsc.tab=0
 
+2-The difference between FlaskForm and <form>
+https://github.com/alaaibr25/StudiesForMe.git
+
+3- use render_temp() to get data from another function,
+and you can loop through it.
+
+@app.route('/add', methods=['POST', 'GET'])
+def add_page():
+    add_form = AddForm()
+    if add_form.validate_on_submit():
+        results = response['results']
+        return render_template('select.html', data=results)
+    return render_template('add.html', form=add_form)
+
+@app.route('/select', methods=['POST', 'GET'])
+def select_movie():
+    return render_template('select.html')
+
+#html page
+{% for m in data %}
+    <ul> <li> <a href="">{{m.title}}</a> </li></ul>
+{%endfor%}
+
+
 
