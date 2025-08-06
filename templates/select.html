@@ -1,0 +1,18 @@
+{% from 'bootstrap5/form.html' import render_form %}
+{% extends "base.html" %}
+{% block title %}Select Movie{%endblock%}
+
+{% block content %}
+<div id="title" >
+
+        <h1 style="font-weight:800;">SELECT MOVIE</h1>
+        <hr>
+    {% for m in data %}
+    <ul>
+        <li> <a href="{{url_for('select_movie', id=m.id)}}">{{m.original_title}}- {{m.release_date}}</a> </li>
+    </ul>
+
+    {%endfor%}
+
+</div>
+{%endblock%}
