@@ -11,6 +11,13 @@ html, body{width:100%,
 hr{--bs-border-width:5px;
         width:20%;}
 
+li a {text-decoration-line: none;
+       color:white; }
+li a:hover{color:gray;}
+
+div.add_form {text-align:center;
+              margin:10px auto auto 400px;
+              }
 
 
 .card{position: relative;
@@ -71,10 +78,20 @@ hr{--bs-border-width:5px;
 .card:nth-child(even) .back {transform: rotateY(180deg);}
 .card:nth-child(even):hover .back {transform: rotateY(0deg);}
 
+.add_btn{margin-left:490px;}
+
+
 @media (max-width:800px){
         .card {width: calc(50% - 3rem);}
+        .add_btn{margin-left:235px;}
+        div.add_form{margin:10px auto auto 170px;}
+        .back{overflow: scroll;}
 
         }
+
+.front h1{position:absolute;
+          left:115px;
+            top:150px;}
 
 a {--bs-border-radius:20px;}
 
